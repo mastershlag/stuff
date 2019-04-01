@@ -88,6 +88,7 @@ int main(int argc, char **argv)
     ft_inicap(&pac);
     if (ret == 0)
     {
+    	// ft_printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		ft_printf("cl_cap : %s", pac.cl_cap);
 		// tputs (cl_cap, 1, putchar);
     	ft_printf("jusqu'ici tt va bien\n");
@@ -104,17 +105,21 @@ int main(int argc, char **argv)
 		// ft_printf("%s", ti_cap);
 		if (ft_cannoner(&cap))
 			return (1);
-		if (!(lock.prompt = (char*)malloc(sizeof(char) * 7)))
+		if (!(lock.prompt = (char*)malloc(sizeof(char) * 24)))
 			return (1);
-		ft_strcpy(lock.prompt, "read: ");
-		lock.promptsize = 6;
+		ft_strcpy(lock.prompt, "\e[96mMastershell\e[0m$> ");
+		lock.promptsize = 14;
+		// if (!(lock.prompt = (char*)malloc(sizeof(char) * 4)))
+		// 	return (1);
+		// ft_strcpy(lock.prompt, "go>");
+		// lock.promptsize = 3;
 		if (ft_newread(&lock, &pac))
 			return (1);
-		write(1, "|end|", 5);
+		// write(1, "|end|", 5);
 		ft_printf("\n{%s}:%d = %d\n", lock.out, ft_strlen(lock.out), lock.lenout);
 		free(lock.out);
 		free(lock.prompt);
-		// write(1, "\n", 1);
+		write(1, "\n", 1);
 		ft_termoder(2);
 		// ft_printf("%s", pac.me_cap);
     }

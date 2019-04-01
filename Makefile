@@ -12,7 +12,8 @@
 
 NAME = ft_select
 SRCS = $(shell find ./seleksrc/ -maxdepth 1 -type f -name '*.c')
-CC = gcc -lncurses -g3 -fsanitize=address #-ltermcap #-Wall -Wextra -Werror -fsanitize=address
+CC = gcc #-g3 -fsanitize=address #-ltermcap #-Wall -Wextra -Werror -fsanitize=address
+BOOST = -lncurses
 CFLAGS = -I ./libft/includes -I ./selekludes
 OBJ = $(SRCS:.c=.o)
 CURR_NBR = 0
@@ -67,7 +68,7 @@ $(NAME): $(OBJ)
 		echo "SELECT  COMPILED" ; \
 	fi ;
 
-	@$(CC) -o $(NAME) $(OBJ) libft/libft.a
+	@$(CC) $(BOOST) -o $(NAME) $(OBJ) libft/libft.a
 
 clean:
 	@make clean -C ./libft/
