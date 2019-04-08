@@ -29,6 +29,7 @@ int init_term()
 
 void 	ft_inicap(t_stockap *pac)
 {
+	pac->rv_cap = tgetstr("mr", NULL);
 	pac->nbcol = tgetnum("co");
 	pac->nbline = tgetnum("li");
 	pac->cl_cap = tgetstr("cl", NULL);
@@ -48,28 +49,30 @@ void 	ft_inicap(t_stockap *pac)
 	pac->backurs_cap = tgetstr("rc", NULL);
 }
 
-int ft_newread(t_keymaster *lock, t_stockap *pac)
+int ft_newread(t_keymaster *lock, t_stockap *pac, t_stock *stock, t_basiks *tools)
 {
-	if (!(lock->out = (char*)malloc(sizeof(char))))
-		return (1);
-	lock->out[0] = 0;
-	lock->lenout = 0;
-	ft_printf("%s", lock->prompt);
-	lock->curspos = lock->promptsize;
-	lock->lvl = 0;
 	while (1)
 	{
 		read(1, lock->buf, 255);
 		lock->index = ft_getkey(lock->buf);
-		if (ft_activkey(lock, pac))
-			return (1);
+		if (ft_activkey(lock, pac, stock, tools))
+			return (0);
 		if (lock->index != 3)
 			ft_memset(lock->buf, 0, 255);
 		else
 			break ;
 	}
-	ft_putatend(lock, pac);
 	return (0);
+}
+
+void	ft_freestock(t_stock *stock)
+{
+	int i;
+
+	i = -1;
+	while (stock->output[++i])
+		free(stock->output[i]);
+	free(stock->output[i]);
 }
 
 int main(int argc, char **argv)
@@ -77,51 +80,90 @@ int main(int argc, char **argv)
     t_stockap	pac;
     t_tcapter	cap;
     t_keymaster lock;
+    t_basiks	tools;
     int 		i;
+    int 		nb;
+	t_stock		stock;
+	char		*out;
 
     int ret = init_term();
-    (void)argc;
-    (void)argv;
-
+    stock.argc = argc - 1;
+    if (argc < 2)
+    {
+    	ft_printf("usage: ft_select arg1 [arg2 ...]\n");
+    	return (0);
+    }
     if (signal(SIGINT, ft_controlcer) == SIG_ERR)
     	ft_printf("sigint escaped the program");
     ft_inicap(&pac);
     if (ret == 0)
     {
-    	// ft_printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-		ft_printf("cl_cap : %s", pac.cl_cap);
+		// ft_printf("cl_cap : %s", pac.cl_cap);
 		// tputs (cl_cap, 1, putchar);
-    	ft_printf("jusqu'ici tt va bien\n");
-        ft_printf("col:%4d, lign:%4d\n", pac.nbcol, pac.nbline);
-        if (tgetflag("os") != 0)
-			ft_printf("os\n");
-		else
-			ft_printf("noos\n");
-		ft_printf("%sPTN%s\n", pac.us_cap, pac.me_cap);
-		ft_printf("%scligno%s\n", pac.mb_cap, pac.me_cap);
-		ft_printf("%sbold%s\n", pac.md_cap, pac.me_cap);
-		ft_printf("%s%s%sall_3%s\n", pac.md_cap, pac.us_cap, pac.mb_cap, pac.me_cap);
+  //   	ft_printf("jusqu'ici tt va bien\n");
+  //       ft_printf("col:%4d, lign:%4d\n", pac.nbcol, pac.nbline);
+  //       if (tgetflag("os") != 0)
+		// 	ft_printf("os\n");
+		// else
+		// 	ft_printf("noos\n");
+		// ft_printf("%sPTN%s\n", pac.us_cap, pac.me_cap);
+		// ft_printf("%scligno%s\n", pac.mb_cap, pac.me_cap);
+		// ft_printf("%sbold%s\n", pac.md_cap, pac.me_cap);
+		// ft_printf("%s%s%sall_3%s\n", pac.md_cap, pac.us_cap, pac.mb_cap, pac.me_cap);
 		// tputs(tgoto(cm_cap, 15, 18), 1, putchar);
 		// ft_printf("%s", ti_cap);
+
 		if (ft_cannoner(&cap))
 			return (1);
-		if (!(lock.prompt = (char*)malloc(sizeof(char) * 24)))
+		if (!(stock.valid = (int*)malloc(sizeof(int) * (argc - 1))))
 			return (1);
-		ft_strcpy(lock.prompt, "\e[96mMastershell\e[0m$> ");
-		lock.promptsize = 14;
-		// if (!(lock.prompt = (char*)malloc(sizeof(char) * 4)))
-		// 	return (1);
-		// ft_strcpy(lock.prompt, "go>");
-		// lock.promptsize = 3;
-		if (ft_newread(&lock, &pac))
+		i = -1;
+		while (++i < (argc - 1))
+			stock.valid[i] = -1;
+		if (!(stock.output = (char**)malloc(sizeof(char*) * argc)))
 			return (1);
-		// write(1, "|end|", 5);
-		ft_printf("\n{%s}:%d = %d\n", lock.out, ft_strlen(lock.out), lock.lenout);
-		free(lock.out);
-		free(lock.prompt);
-		write(1, "\n", 1);
+		i = 0;
+		nb = 0;
+		while (argv[++i])
+		{
+			if (!(stock.output[nb] = (char*)malloc(sizeof(char) * (ft_strlen(argv[i]) + 1))))
+				return (1);
+			ft_strcpy(stock.output[nb], argv[i]);
+			nb++;
+		}
+		stock.output[nb] = 0;
+		stock.select = 0;
+		ft_basic(&stock, &pac, &tools);
+		if (ft_newread(&lock, &pac, &stock, &tools))
+			return (1);
+		ft_rebasic(&pac, &tools);
+		// ft_printf("\n{%s}:%d = %d\n", lock.out, ft_strlen(lock.out), lock.lenout);
+		// free(lock.out);
+		// free(lock.prompt);
+		// write(1, "\n", 1);
 		ft_termoder(2);
-		// ft_printf("%s", pac.me_cap);
+		// ft_printf("selectionés:\n");
+		i = -1;
+		stock.argc = 0;
+		while (stock.output[++i])
+		{
+			if (stock.valid[i] == 1)
+				stock.argc += (ft_strlen(stock.output[i]) + 1);
+		}
+		if (!(out = (char*)malloc(sizeof(char) * stock.argc)))
+			return (1);
+		out[0] = 0;
+		i = -1;
+		while (stock.output[++i])
+			if (stock.valid[i] == 1)
+			{
+				ft_strcat(out, stock.output[i]);
+				ft_strcat(out, " ");
+			}
+		out[stock.argc - 1] = 0;
+		ft_printf("%s", out);
+		free(out);
+		ft_freestock(&stock);
     }
     return (ret);
 }

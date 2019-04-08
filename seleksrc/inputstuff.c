@@ -14,6 +14,8 @@ int		ft_getkey(char *buf)
 		return (3);
 	if (buf[0] == 127)
 		return (4);
+	if (buf[0] == ' ')
+		return (5);
 	return (0);
 }
 
