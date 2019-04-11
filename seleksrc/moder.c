@@ -4,9 +4,17 @@ void		ft_controlcer(int signo)
 {
 	if (signo == SIGINT)
 	{
+		ft_rebasic(&g_pac, &g_tools);
 		ft_termoder(2);
 		exit(1);
 	}
+	if (signo == SIGWINCH)
+	{
+		ft_rebasic(&g_pac, &g_tools);
+		ft_basic(&g_stock, &g_pac, &g_tools);
+	}
+	if (signo == SIGCONT)
+		ft_cannoner();
 }
 
 void		ft_termoder(int mode)
@@ -25,14 +33,16 @@ void		ft_termoder(int mode)
 	}
 }
 
-int			ft_cannoner(t_tcapter *cap)
+int			ft_cannoner(void)
 {
-	if (tcgetattr(STDIN_FILENO, &(cap->terter)) == -1)
+	struct termios	terter;
+
+	if (tcgetattr(STDIN_FILENO, &terter) == -1)
 		exit(1);
 	ft_termoder(1);
-	cap->terter.c_lflag &= ~(ICANON);
-	cap->terter.c_lflag &= ~(ECHO);
-	if (tcsetattr(STDIN_FILENO, TCSANOW, &(cap->terter)) == -1)
+	terter.c_lflag &= ~(ICANON);
+	terter.c_lflag &= ~(ECHO);
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &terter) == -1)
 	{
 		ft_termoder(2);
 		ft_putstr_fd("Call to tcsetattr() failed\n", STDERR_FILENO);

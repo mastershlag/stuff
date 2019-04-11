@@ -7,23 +7,20 @@ int init_term()
 
     if (term_type == NULL)
     {
-        fprintf(stderr, "TERM must be set (see 'env').\n");
+        ft_printfd(2, "TERM must be set (see 'env').\n");
         return -1;
     }
-
     ret = tgetent(NULL, term_type);
-
     if (ret == -1)
     {
-        fprintf(stderr, "Could not access to the termcap database..\n");
+        ft_printfd(2, "Could not access to the termcap database..\n");
         return -1;
     }
     else if (ret == 0)
     {
-        fprintf(stderr, "Terminal type '%s' is not defined in termcap database (or have too few informations).\n", term_type);
+        ft_printfd(2, "'%s' is not defined in termcap database.\n", term_type);
         return -1;
     }
-
     return 0;
 }
 
@@ -49,11 +46,12 @@ void 	ft_inicap(t_stockap *pac)
 	pac->backurs_cap = tgetstr("rc", NULL);
 }
 
-int ft_newread(t_keymaster *lock, t_stockap *pac, t_stock *stock, t_basiks *tools)
+int ft_newread(t_keymaster *lock, t_stockap *pac,
+	t_stock *stock, t_basiks *tools)
 {
 	while (1)
 	{
-		read(1, lock->buf, 255);
+		read(0, lock->buf, 255);
 		lock->index = ft_getkey(lock->buf);
 		if (ft_activkey(lock, pac, stock, tools))
 			return (0);
@@ -73,97 +71,101 @@ void	ft_freestock(t_stock *stock)
 	while (stock->output[++i])
 		free(stock->output[i]);
 	free(stock->output[i]);
+	free(stock->output);
+}
+
+void	ft_inimain()
+{
+    if (signal(SIGINT, ft_controlcer) == SIG_ERR)
+    	ft_exit(2, "", &g_stock);
+    if (signal(SIGWINCH, ft_controlcer) == SIG_ERR)
+    	ft_exit(2, "", &g_stock);
+    if (signal(SIGCONT, ft_controlcer) == SIG_ERR)
+    	ft_exit(2, "", &g_stock);
+}
+
+int		ft_createout(t_stock *stock)
+{
+	int			i;
+	char		*out;
+
+	i = -1;
+	stock->argc = 0;
+	while (stock->output[++i])
+	{
+		if (stock->valid[i] == 1)
+			stock->argc += (ft_strlen(stock->output[i]) + 1);
+	}
+	if (!(out = (char*)malloc(sizeof(char) * stock->argc)))
+		return (1);
+	out[0] = 0;
+	i = -1;
+	while (stock->output[++i])
+		if (stock->valid[i] == 1)
+		{
+			ft_strcat(out, stock->output[i]);
+			ft_strcat(out, " ");
+		}
+	out[stock->argc - 1] = 0;
+	ft_printfd(1, "%s", out);
+	free(out);
+	ft_freestock(stock);
+	return (0);
+}
+
+void	ft_createstock(t_stock *stock, int argc, char **argv)
+{
+    int 		nb;
+    int			i;
+
+	if (ft_cannoner())
+		exit(1);
+	if (!(stock->valid = (int*)malloc(sizeof(int) * (argc - 1))))
+		ft_exit(2, "", stock);
+	i = -1;
+	while (++i < (argc - 1))
+		stock->valid[i] = -1;
+	if (!(stock->output = (char**)malloc(sizeof(char*) * argc)))
+		ft_exit(2, "", stock);
+	i = 0;
+	nb = 0;
+	while (argv[++i])
+	{
+		if (!(stock->output[nb] = (char*)malloc(sizeof(char)
+			* (ft_strlen(argv[i]) + 1))))
+			ft_exit(2, "", stock);
+		ft_strcpy(stock->output[nb], argv[i]);
+		nb++;
+	}
+	stock->output[nb] = 0;
+	stock->select = 0;
 }
 
 int main(int argc, char **argv)
 {
-    t_stockap	pac;
-    t_tcapter	cap;
     t_keymaster lock;
-    t_basiks	tools;
     int 		i;
-    int 		nb;
-	t_stock		stock;
-	char		*out;
+	int			ret;
 
-    int ret = init_term();
-    stock.argc = argc - 1;
-    if (argc < 2)
+	ft_inimain();
+	ret = init_term();
+    ft_inicap(&g_pac);
+    g_stock.argc = argc - 1;
+	if (argc < 2)
     {
-    	ft_printf("usage: ft_select arg1 [arg2 ...]\n");
+    	ft_printfd(2, "usage: ft_select arg1 [arg2 ...]\n");
     	return (0);
     }
-    if (signal(SIGINT, ft_controlcer) == SIG_ERR)
-    	ft_printf("sigint escaped the program");
-    ft_inicap(&pac);
     if (ret == 0)
     {
-		// ft_printf("cl_cap : %s", pac.cl_cap);
-		// tputs (cl_cap, 1, putchar);
-  //   	ft_printf("jusqu'ici tt va bien\n");
-  //       ft_printf("col:%4d, lign:%4d\n", pac.nbcol, pac.nbline);
-  //       if (tgetflag("os") != 0)
-		// 	ft_printf("os\n");
-		// else
-		// 	ft_printf("noos\n");
-		// ft_printf("%sPTN%s\n", pac.us_cap, pac.me_cap);
-		// ft_printf("%scligno%s\n", pac.mb_cap, pac.me_cap);
-		// ft_printf("%sbold%s\n", pac.md_cap, pac.me_cap);
-		// ft_printf("%s%s%sall_3%s\n", pac.md_cap, pac.us_cap, pac.mb_cap, pac.me_cap);
-		// tputs(tgoto(cm_cap, 15, 18), 1, putchar);
-		// ft_printf("%s", ti_cap);
-
-		if (ft_cannoner(&cap))
+		ft_createstock(&g_stock, argc, argv);
+		ft_basic(&g_stock, &g_pac, &g_tools);
+		if (ft_newread(&lock, &g_pac, &g_stock, &g_tools))
 			return (1);
-		if (!(stock.valid = (int*)malloc(sizeof(int) * (argc - 1))))
-			return (1);
-		i = -1;
-		while (++i < (argc - 1))
-			stock.valid[i] = -1;
-		if (!(stock.output = (char**)malloc(sizeof(char*) * argc)))
-			return (1);
-		i = 0;
-		nb = 0;
-		while (argv[++i])
-		{
-			if (!(stock.output[nb] = (char*)malloc(sizeof(char) * (ft_strlen(argv[i]) + 1))))
-				return (1);
-			ft_strcpy(stock.output[nb], argv[i]);
-			nb++;
-		}
-		stock.output[nb] = 0;
-		stock.select = 0;
-		ft_basic(&stock, &pac, &tools);
-		if (ft_newread(&lock, &pac, &stock, &tools))
-			return (1);
-		ft_rebasic(&pac, &tools);
-		// ft_printf("\n{%s}:%d = %d\n", lock.out, ft_strlen(lock.out), lock.lenout);
-		// free(lock.out);
-		// free(lock.prompt);
-		// write(1, "\n", 1);
+		ft_rebasic(&g_pac, &g_tools);
 		ft_termoder(2);
-		// ft_printf("selectionés:\n");
-		i = -1;
-		stock.argc = 0;
-		while (stock.output[++i])
-		{
-			if (stock.valid[i] == 1)
-				stock.argc += (ft_strlen(stock.output[i]) + 1);
-		}
-		if (!(out = (char*)malloc(sizeof(char) * stock.argc)))
+		if (ft_createout(&g_stock))
 			return (1);
-		out[0] = 0;
-		i = -1;
-		while (stock.output[++i])
-			if (stock.valid[i] == 1)
-			{
-				ft_strcat(out, stock.output[i]);
-				ft_strcat(out, " ");
-			}
-		out[stock.argc - 1] = 0;
-		ft_printf("%s", out);
-		free(out);
-		ft_freestock(&stock);
     }
     return (ret);
 }

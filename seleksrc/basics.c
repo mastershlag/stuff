@@ -85,10 +85,25 @@ static void	ft_reboot(t_stock *stock)
 	}
 }
 
+void		ft_basicmainloop(t_stock *stock, t_stockap *pac, t_basiks *tools,
+	t_ijer *lol)
+{
+	if ((lol->i + (lol->j * tools->nbligne)) == stock->select)
+		ft_printfd(0, "%s", pac->us_cap);
+	if (stock->valid[(lol->i + (lol->j * tools->nbligne))] == 1)
+		ft_printfd(0, "%s", pac->rv_cap);
+	if ((lol->i + (lol->j * tools->nbligne)) == stock->select
+		&& stock->valid[(lol->i + (lol->j * tools->nbligne))] == 1)
+		ft_printfd(0, "%s", pac->md_cap);
+	ft_printfd(0, "%s", stock->output[lol->i + (lol->j * tools->nbligne)]);
+	ft_printfd(0, "%s", pac->me_cap);
+}
+
 int			ft_basic(t_stock *stock, t_stockap *pac, t_basiks *tools)
 {
-	int			i;
-	int			j;
+	int		i;
+	int		j;
+	t_ijer	lol;
 
 	if (ft_maxfinder(stock, tools) || ft_outcreator(tools))
 		return (1);
@@ -100,19 +115,14 @@ int			ft_basic(t_stock *stock, t_stockap *pac, t_basiks *tools)
 	while (++i < tools->nbligne)
 	{
 		j = -1;
-		while (++j < tools->lignemax && (i + (j * tools->nbligne)) < tools->nbobj
-				&& stock->output[i + (j * tools->nbligne)])
+		while (++j < tools->lignemax && stock->output[i + (j * tools->nbligne)]
+			&& (i + (j * tools->nbligne)) < tools->nbobj)
 		{
-			if ((i + (j * tools->nbligne)) == stock->select)
-				ft_printf("%s", pac->us_cap);
-			if (stock->valid[(i + (j * tools->nbligne))] == 1)
-				ft_printf("%s", pac->rv_cap);
-			if ((i + (j * tools->nbligne)) == stock->select && stock->valid[(i + (j * tools->nbligne))] == 1)
-				ft_printf("%s", pac->md_cap);
-			ft_printf("%s", stock->output[i + (j * tools->nbligne)]);
-			ft_printf("%s", pac->me_cap);
+			lol.i = i;
+			lol.j = j;
+			ft_basicmainloop(stock, pac, tools, &lol);
 		}
-		ft_printf("\n");
+		ft_printfd(0, "\n");
 	}
 	ft_reboot(stock);
 	return (0);

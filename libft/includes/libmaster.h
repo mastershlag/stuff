@@ -182,4 +182,6 @@ char			*ft_strchrstr(const char *s, char *find);
 char			*ft_strjoin_ufree(char *str, char *buff);
 int				ft_mastoi(const char *str);
 
+int				ft_printfd(int fd, const char *format, ...);
+void			nfd(t_parameters *param, t_norm *nrm, int fd);
 #endif

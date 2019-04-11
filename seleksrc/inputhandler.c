@@ -30,6 +30,7 @@ void	ft_suppr(t_stock *stock)
 	free(stock->output[stock->select]);
 	if (stock->argc == 0)
 	{
+		stock->output[0] = malloc(sizeof(char));
 		stock->output[0] = stock->output[1];
 		return ;
 	}
@@ -49,19 +50,24 @@ void	ft_suppr(t_stock *stock)
 	return ;
 }
 
-int		ft_activkey(t_keymaster *lock, t_stockap *pac, t_stock *stock, t_basiks	*tools)
+int		ft_activkey(t_keymaster *lock, t_stockap *pac,
+	t_stock *stock, t_basiks	*tools)
 {
 	int hmm;
 
-	if (lock->index == 1) //gauche
+	if (lock->index == 1)
 		ft_lefter(stock);
-	if (lock->index == 2) //droite
+	if (lock->index == 2)
 		ft_righter(stock);
-	if (lock->index == 5) //droite
+	if (lock->index == 5)
 		ft_validate(stock);
-	if (lock->index == 4) //del
+	if (lock->index == 4)
 		ft_suppr(stock);
-
+	if (lock->index == 7)
+	{
+		ft_rebasic(pac, tools);
+		ft_exit(0, "", stock);
+	}
 	if (stock->argc == 0)
 		return (1);
 	ft_rebasic(pac, tools);

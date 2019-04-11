@@ -6,11 +6,13 @@
 # include <curses.h>
 # include <term.h>
 # include <sys/ioctl.h>
+# include <errno.h>  
 
-typedef struct			s_tcapter
+typedef struct			s_ijer
 {
-	struct termios	terter;
-}						t_tcapter;
+	int		i;
+	int		j;
+}						t_ijer;
 
 typedef struct			s_stockap
 {
@@ -62,8 +64,12 @@ typedef struct	s_basiks
 	int		lignemax;
 }				t_basiks;
 
+t_basiks	g_tools;
+t_stockap	g_pac;
+t_stock		g_stock;
+
 void		ft_termoder(int mode);
-int			ft_cannoner(t_tcapter *cap);
+int			ft_cannoner(void);
 void		ft_controlcer(int signo);
 int			ft_getkey(char *buf);
 void		ft_putatend(t_keymaster *lock, t_stockap *pac);
@@ -73,5 +79,7 @@ void		ft_goleft(t_keymaster *lock, t_stockap *pac);
 int			ft_basic(t_stock *stock, t_stockap *pac, t_basiks *tools);
 void		ft_rebasic(t_stockap *pac, t_basiks *tools);
 int			ft_activkey(t_keymaster *lock, t_stockap *pac, t_stock *stock, t_basiks	*tools);
+void		ft_exit(int opt, char *msg, t_stock *stock);
+void		ft_freestock(t_stock *stock);
 
 #endif

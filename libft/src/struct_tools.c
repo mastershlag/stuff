@@ -53,6 +53,21 @@ void	n(t_parameters *param, t_norm *nrm)
 	nrm->printed_char += ft_strlen(param->arg) + 1;
 }
 
+void	nfd(t_parameters *param, t_norm *nrm, int fd)
+{
+	if (param->masterflag[1] == 2)
+	{
+		ft_putchar_fd(0, fd);
+		ft_putstr_fd(param->arg, fd);
+	}
+	else
+	{
+		ft_putstr_fd(param->arg, fd);
+		ft_putchar_fd(0, fd);
+	}
+	nrm->printed_char += ft_strlen(param->arg) + 1;
+}
+
 void	check_maj_specifier(t_parameters *param)
 {
 	if (param->specifier != 'X' && param->specifier >= 'A'
