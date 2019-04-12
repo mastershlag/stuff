@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   inputhandler.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pharatyk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/12 12:17:37 by pharatyk          #+#    #+#             */
+/*   Updated: 2019/04/12 12:17:38 by pharatyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "selek.h"
 
 void	ft_righter(t_stock *stock)
@@ -51,7 +63,7 @@ void	ft_suppr(t_stock *stock)
 }
 
 int		ft_activkey(t_keymaster *lock, t_stockap *pac,
-	t_stock *stock, t_basiks	*tools)
+	t_stock *stock, t_basiks *tools)
 {
 	int hmm;
 

@@ -181,6 +181,9 @@ long long		ft_ultimatoi(const char *str);
 char			*ft_strchrstr(const char *s, char *find);
 char			*ft_strjoin_ufree(char *str, char *buff);
 int				ft_mastoi(const char *str);
+int				go_end(const char *format, int i);
+t_parameters	parameters_parser(const char *format, va_list arg, int i);
+void			procedure2(const char *format, t_norm *sympa);
 
 int				ft_printfd(int fd, const char *format, ...);
 void			nfd(t_parameters *param, t_norm *nrm, int fd);

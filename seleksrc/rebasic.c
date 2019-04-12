@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rebasic.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pharatyk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/12 12:17:57 by pharatyk          #+#    #+#             */
+/*   Updated: 2019/04/12 12:17:59 by pharatyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "selek.h"
 
-void ft_rebasic(t_stockap *pac, t_basiks *tools)
+void	ft_rebasic(t_stockap *pac, t_basiks *tools)
 {
 	int				i;
 	int				newnbline;
-	struct	winsize	w;
+	struct winsize	w;
 
 	if ((ioctl(0, TIOCGWINSZ, &w)) == -1)
 		return ;
