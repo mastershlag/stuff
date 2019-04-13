@@ -12,6 +12,13 @@
 
 #include "selek.h"
 
+void		ft_endit(t_stock *stock, t_stockap *pac, t_basiks *tools)
+{
+	free(stock->output);
+	ft_rebasic(pac, tools);
+	ft_exit(3, "", stock);
+}
+
 void		ft_controlcer(int signo)
 {
 	if (signo == SIGINT)

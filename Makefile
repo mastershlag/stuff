@@ -12,7 +12,7 @@
 
 NAME = ft_select
 SRCS = $(shell find ./seleksrc/ -maxdepth 1 -type f -name '*.c')
-CC = gcc #-g3 -fsanitize=address #-ltermcap #-Wall -Wextra -Werror -fsanitize=address
+CC = gcc -Wall -Wextra -Werror #-fsanitize=address
 BOOST = -lncurses
 CFLAGS = -I ./libft/includes -I ./selekludes
 OBJ = $(SRCS:.c=.o)

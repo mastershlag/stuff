@@ -35,12 +35,14 @@ void	ft_rebasic(t_stockap *pac, t_basiks *tools)
 void	ft_exit(int opt, char *msg, t_stock *stock)
 {
 	ft_termoder(2);
-	if (opt != 2)
+	if (opt < 2)
 	{
 		ft_freestock(stock);
 		if (opt == 0)
 			exit(0);
 		ft_printfd(0, "%s\n", msg);
 	}
+	if (opt == 3)
+		exit(0);
 	exit(1);
 }

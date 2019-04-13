@@ -88,7 +88,7 @@ void			ft_simplegoright(t_keymaster *lock, t_stockap *pac);
 void			ft_goleft(t_keymaster *lock, t_stockap *pac);
 int				ft_basic(t_stock *stock, t_stockap *pac, t_basiks *tools);
 void			ft_rebasic(t_stockap *pac, t_basiks *tools);
-int				ft_activkey(t_keymaster *lock, t_stockap *pac, t_stock *stock,
+void			ft_activkey(t_keymaster *lock, t_stockap *pac, t_stock *stock,
 	t_basiks *tools);
 void			ft_exit(int opt, char *msg, t_stock *stock);
 void			ft_freestock(t_stock *stock);
@@ -97,5 +97,6 @@ int				init_term(void);
 void			ft_inicap(t_stockap *pac);
 void			ft_basicmainloop(t_stock *stock, t_stockap *pac,
 	t_basiks *tools, t_ijer *lol);
+void			ft_endit(t_stock *stock, t_stockap *pac, t_basiks *tools);
 
 #endif

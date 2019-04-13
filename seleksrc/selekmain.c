@@ -12,21 +12,19 @@
 
 #include "selek.h"
 
-int		ft_newread(t_keymaster *lock, t_stockap *pac,
+void	ft_newread(t_keymaster *lock, t_stockap *pac,
 		t_stock *stock, t_basiks *tools)
 {
 	while (1)
 	{
 		read(0, lock->buf, 255);
 		lock->index = ft_getkey(lock->buf);
-		if (ft_activkey(lock, pac, stock, tools))
-			return (0);
+		ft_activkey(lock, pac, stock, tools);
 		if (lock->index != 3)
 			ft_memset(lock->buf, 0, 255);
 		else
 			break ;
 	}
-	return (0);
 }
 
 int		ft_createout(t_stock *stock)
@@ -89,7 +87,6 @@ void	ft_createstock(t_stock *stock, int argc, char **argv)
 int		main(int argc, char **argv)
 {
 	t_keymaster lock;
-	int			i;
 	int			ret;
 
 	ft_inimain();
@@ -105,8 +102,7 @@ int		main(int argc, char **argv)
 	{
 		ft_createstock(&g_stock, argc, argv);
 		ft_basic(&g_stock, &g_pac, &g_tools);
-		if (ft_newread(&lock, &g_pac, &g_stock, &g_tools))
-			return (1);
+		ft_newread(&lock, &g_pac, &g_stock, &g_tools);
 		ft_rebasic(&g_pac, &g_tools);
 		ft_termoder(2);
 		if (ft_createout(&g_stock))
