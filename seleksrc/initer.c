@@ -24,6 +24,17 @@ void	ft_fillout(t_stock *stock, char **out)
 			ft_strcat(out[0], " ");
 		}
 	out[0][stock->argc - 1] = 0;
+	i = -1;
+	while (out[0][++i])
+	{
+		if (out[0][i] == '\\' && out[0][i + 1] == 'n')
+		{
+			out[0][i] = '\n';
+			out[0][i + 1] = 0;
+			ft_strcator(out[0], out[0] + i + 2);
+			i--;
+		}
+	}
 }
 
 void	ft_inicap(t_stockap *pac)

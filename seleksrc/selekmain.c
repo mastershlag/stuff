@@ -77,6 +77,7 @@ void	ft_createstock(t_stock *stock, int argc, char **argv)
 	}
 	stock->output[nb] = 0;
 	stock->select = 0;
+	ft_stopstock(stock);
 }
 
 int		main(int argc, char **argv)
