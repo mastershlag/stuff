@@ -90,10 +90,9 @@ static void	ft_reboot(t_stock *stock)
 	i = -1;
 	while (stock->output[++i])
 	{
-		j = -1;
-		while (stock->output[i][++j] || stock->output[i][j])
-			if (stock->output[i][j] == ' ')
-				stock->output[i][j] = 0;
+		j = ft_strlen(stock->output[i]);
+		while (stock->output[i][--j] == ' ')
+			stock->output[i][j] = 0;
 	}
 }
 
