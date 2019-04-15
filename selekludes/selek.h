@@ -98,5 +98,6 @@ void			ft_inicap(t_stockap *pac);
 void			ft_basicmainloop(t_stock *stock, t_stockap *pac,
 	t_basiks *tools, t_ijer *lol);
 void			ft_endit(t_stock *stock, t_stockap *pac, t_basiks *tools);
+void			ft_fillout(t_stock *stock, char **out);
 
 #endif

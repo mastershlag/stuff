@@ -15,6 +15,7 @@
 void	ft_newread(t_keymaster *lock, t_stockap *pac,
 		t_stock *stock, t_basiks *tools)
 {
+	ft_memset(lock->buf, 0, 255);
 	while (1)
 	{
 		read(0, lock->buf, 255);
@@ -39,17 +40,11 @@ int		ft_createout(t_stock *stock)
 		if (stock->valid[i] == 1)
 			stock->argc += (ft_strlen(stock->output[i]) + 1);
 	}
-	if (!(out = (char*)malloc(sizeof(char) * stock->argc)))
+	if (!(out = (char*)malloc(sizeof(char) * (stock->argc + 1))))
 		return (1);
 	out[0] = 0;
-	i = -1;
-	while (stock->output[++i])
-		if (stock->valid[i] == 1)
-		{
-			ft_strcat(out, stock->output[i]);
-			ft_strcat(out, " ");
-		}
-	out[stock->argc - 1] = 0;
+	if (stock->argc)
+		ft_fillout(stock, &out);
 	ft_printfd(1, "%s", out);
 	free(out);
 	ft_freestock(stock);

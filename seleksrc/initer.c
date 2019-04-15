@@ -12,6 +12,20 @@
 
 #include "selek.h"
 
+void	ft_fillout(t_stock *stock, char **out)
+{
+	int i;
+
+	i = -1;
+	while (stock->output[++i])
+		if (stock->valid[i] == 1)
+		{
+			ft_strcat(out[0], stock->output[i]);
+			ft_strcat(out[0], " ");
+		}
+	out[0][stock->argc - 1] = 0;
+}
+
 void	ft_inicap(t_stockap *pac)
 {
 	pac->rv_cap = tgetstr("mr", NULL);
