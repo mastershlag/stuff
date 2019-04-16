@@ -73,6 +73,11 @@ static int	ft_outcreator(t_basiks *tools)
 	int		isimpair;
 	float	truenbline;
 
+	if (tools->lignemax == 0)
+	{
+		tools->nbligne = -1;
+		return (0);
+	}
 	isimpair = (tools->nbobj % 2);
 	truenbline = (float)tools->nbobj / (float)(tools->lignemax);
 	if (truenbline > (int)truenbline)
@@ -105,7 +110,7 @@ int			ft_basic(t_stock *stock, t_stockap *pac, t_basiks *tools)
 	if (ft_maxfinder(stock, tools) || ft_outcreator(tools))
 		return (1);
 	tools->lignemax = 0;
-	if (tools->nbligne)
+	if (tools->nbligne >= 0)
 		while ((tools->lignemax * tools->nbligne) < tools->nbobj)
 			tools->lignemax += 1;
 	i = -1;
